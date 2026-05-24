@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Blog</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Lora:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f5f0e8;
+      --ink: #1a1510;
+      --muted: #7a6f61;
+      --accent: #c0392b;
+      --rule: #d4c9b8;
+      --card-bg: #fffdf8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Lora', Georgia, serif;
+      font-size: 1.05rem;
+      line-height: 1.75;
+    }
+
+    /* ── Masthead ── */
+    header {
+      border-bottom: 3px double var(--ink);
+      padding: 2.5rem 2rem 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .kicker {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    header h1 span { color: var(--accent); font-style: italic; }
+
+    .tagline {
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    nav {
+      margin-top: 1.25rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    nav a {
+      color: var(--ink);
+      text-decoration: none;
+      padding-bottom: 2px;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    nav a:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-top: 1px solid var(--rule);
+      padding-top: 0.6rem;
+      margin-bottom: 2rem;
+    }
+
+    /* ── Featured post ── */
+    .featured {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    @media (max-width: 600px) { .featured { grid-template-columns: 1fr; } }
+
+    .featured-img {
+      background: linear-gradient(135deg, #2c1810 0%, #8b3a2a 60%, #c0392b 100%);
+      border-radius: 2px;
+      min-height: 220px;
+      display: flex;
+      align-items: flex-end;
+      padding: 1.2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .featured-img::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg, transparent, transparent 4px,
+        rgba(255,255,255,0.03) 4px, rgba(255,255,255,0.03) 8px
+      );
+    }
+
+    .featured-img .label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      background: var(--accent);
+      padding: 2px 8px;
+      position: relative;
+    }
+
+    .featured-body { display: flex; flex-direction: column; justify-content: center; gap: 0.75rem; }
+
+    .featured-body .tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .featured-body h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .featured-body p { font-size: 0.95rem; color: var(--muted); }
+
+    .featured-body .meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .read-more {
+      display: inline-block;
+      margin-top: 0.25rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--ink);
+      padding-bottom: 1px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .read-more:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Post list ── */
+    .post-list { display: flex; flex-direction: column; gap: 0; }
+
+    .post-item {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 1.5rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: start;
+      transition: background 0.15s;
+    }
+
+    .post-item:hover { background: rgba(192,57,43,0.03); }
+
+    .post-date {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      padding-top: 0.3rem;
+      text-align: right;
+      border-right: 1px solid var(--rule);
+      padding-right: 1.5rem;
+    }
+
+    .post-date .day {
+      display: block;
+      font-size: 1.6rem;
+      font-family: 'Playfair Display', serif;
+      color: var(--ink);
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1;
+      margin-bottom: 0.15rem;
+    }
+
+    .post-content h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+      line-height: 1.3;
+    }
+
+    .post-content h3 a { color: var(--ink); text-decoration: none; }
+    .post-content h3 a:hover { color: var(--accent); }
+
+    .post-content p { font-size: 0.9rem; color: var(--muted); }
+
+    .post-tags { margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .post-tags span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--rule);
+      padding: 1px 7px;
+      border-radius: 1px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 3px double var(--ink);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    /* ── Fade-in on load ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header  { animation: fadeUp 0.5s ease both; }
+    .featured { animation: fadeUp 0.5s 0.1s ease both; }
+    .post-item:nth-child(1) { animation: fadeUp 0.5s 0.15s ease both; }
+    .post-item:nth-child(2) { animation: fadeUp 0.5s 0.20s ease both; }
+    .post-item:nth-child(3) { animation: fadeUp 0.5s 0.25s ease both; }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header>
+    <p class="kicker">Est. 2026 &nbsp;·&nbsp; Vol. I</p>
+    <h1>The <span>Notebook</span></h1>
+    <p class="tagline">Writing on code, craft, and everything in between</p>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Archive</a>
+      <a href="#">About</a>
+      <a href="#">RSS</a>
+    </nav>
+  </header>
+
+  <!-- ── Main content ── -->
+  <main class="container">
+
+    <!-- Featured post -->
+    <p class="section-label">Featured</p>
+    <div class="featured">
+      <div class="featured-img">
+        <span class="label">Latest</span>
+      </div>
+      <div class="featured-body">
+        <span class="tag">Essay</span>
+        <h2>Why I Started Writing Again</h2>
+        <p>A reflection on shipping code silently for years and what finally convinced me to put thoughts into words.</p>
+        <span class="meta">May 24, 2026 &nbsp;·&nbsp; 5 min read</span>
+        <a class="read-more" href="#">Read the piece →</a>
+      </div>
+    </div>
+
+    <!-- Post list -->
+    <p class="section-label">Recent Posts</p>
+    <div class="post-list">
+
+      <div class="post-item">
+        <div class="post-date">
+          <span class="day">18</span>
+          May 2026
+        </div>
+        <div class="post-content">
+          <h3><a href="#">The Unreasonable Effectiveness of Plain Text</a></h3>
+          <p>Markdown, flat files, and why I stopped reaching for databases.</p>
+          <div class="post-tags">
+            <span>Tools</span><span>Productivity</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="post-item">
+        <div class="post-date">
+          <span class="day">09</span>
+          May 2026
+        </div>
+        <div class="post-content">
+          <h3><a href="#">Building a Static Site Generator in 100 Lines</a></h3>
+          <p>A weekend project that taught me more about parsers than I expected.</p>
+          <div class="post-tags">
+            <span>JavaScript</span><span>Tutorial</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="post-item">
+        <div class="post-date">
+          <span class="day">27</span>
+          Apr 2026
+        </div>
+        <div class="post-content">
+          <h3><a href="#">Notes on Learning in Public</a></h3>
+          <p>Six months of blogging, what worked, what flopped, and what I'd do differently.</p>
+          <div class="post-tags">
+            <span>Meta</span><span>Writing</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <p>© 2026 Your Name &nbsp;·&nbsp; <a href="https://github.com/yourusername">GitHub</a> &nbsp;·&nbsp; Built with GitHub Pages</p>
+  </footer>
+
+</body>
+</html>
